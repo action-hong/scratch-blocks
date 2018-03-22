@@ -29,3 +29,4 @@ common.pyc
 /gh-pages/closure-library
 /gh-pages/_site
 .idea/
+/Tmp_*.js

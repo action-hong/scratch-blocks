@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#! python2
 # Compresses the core Blockly files into a single JavaScript file.
 #
 # Copyright 2012 Google Inc.
@@ -210,14 +210,15 @@ class Gen_compressed(threading.Thread):
     filenames = calcdeps.CalculateDependencies(search_paths,
         [os.path.join("core", "blockly.js")])
     filenames.sort()  # Deterministic build.
-    for filename in filenames:
-      # Filter out the Closure files (the compiler will add them).
-      if filename.startswith(os.pardir + os.sep):  # '../'
-        continue
-      f = open(filename)
-      params.append(("js_code", "".join(f.readlines())))
-      f.close()
-
+    # for filename in filenames:
+    #   # Filter out the Closure files (the compiler will add them).
+    #   if filename.startswith(os.pardir + os.sep):  # '../'
+    #     continue
+    #   f = open(filename)
+    #   params.append(("js_code", "".join(f.readlines())))
+    #   f.close()
+    print("gen_core")
+    # print(filenames)
     self.do_compile(params, target_filename, filenames, "")
 
   def gen_blocks(self, block_type):
@@ -246,11 +247,12 @@ class Gen_compressed(threading.Thread):
     # Add Blockly.Colours for use of centralized colour bank
     filenames.append(os.path.join("core", "colours.js"))
     filenames.append(os.path.join("core", "constants.js"))
-    for filename in filenames:
-      f = open(filename)
-      params.append(("js_code", "".join(f.readlines())))
-      f.close()
-
+    # for filename in filenames:
+    #   f = open(filename)
+    #   params.append(("js_code", "".join(f.readlines())))
+    #   f.close()
+    filenames.insert(0, "my-blockly.js")
+    print("gen_blocks")
     # Remove Blockly.Blocks to be compatible with Blockly.
     remove = "var Blockly={Blocks:{}};"
     self.do_compile(params, target_filename, filenames, remove)
@@ -274,11 +276,12 @@ class Gen_compressed(threading.Thread):
         os.path.join("generators", language, "*.js"))
     filenames.sort()  # Deterministic build.
     filenames.insert(0, os.path.join("generators", language + ".js"))
-    for filename in filenames:
-      f = open(filename)
-      params.append(("js_code", "".join(f.readlines())))
-      f.close()
-    filenames.insert(0, "[goog.provide]")
+    filenames.insert(0, "my-generator.js")
+    # for filename in filenames:
+    #   f = open(filename)
+    #   params.append(("js_code", "".join(f.readlines())))
+    #   f.close()
+    # filenames.insert(0, "[goog.provide]")
 
     # Remove Blockly.Generator to be compatible with Blockly.
     remove = "var Blockly={Generator:{}};"
@@ -286,97 +289,112 @@ class Gen_compressed(threading.Thread):
 
   def do_compile(self, params, target_filename, filenames, remove):
     # Send the request to Google.
-    headers = {"Content-type": "application/x-www-form-urlencoded"}
-    conn = httplib.HTTPSConnection("closure-compiler.appspot.com")
-    conn.request("POST", "/compile", urllib.urlencode(params), headers)
-    response = conn.getresponse()
-    json_str = response.read()
-    conn.close()
+    # headers = {"Content-type": "application/x-www-form-urlencoded"}
+    # conn = httplib.HTTPSConnection("closure-compiler.appspot.com")
+    # conn.request("POST", "/compile", urllib.urlencode(params), headers)
+    # response = conn.getresponse()
+    # json_str = response.read()
+    # conn.close()
 
+    compileName = ""
+    for name in filenames:
+      compileName = compileName + name + " "
+    os.system("java -jar closure-compiler.jar --js_output_file=Tmp_" + target_filename + " " + compileName)
+    f = open("Tmp_" + target_filename, 'r')
+    content = f.read()
+    content = content.replace(remove, "")
+    prev = "Blockly.Constants={};"
+    now = "Blockly.Constants=Blockly.Constants||{};"
+    content = content.replace(prev, now)
+    outputF = open(target_filename, "w")
+
+    outputF.write(content)
+    outputF.close()
+    f.close()
     # Parse the JSON response.
-    json_data = json.loads(json_str)
+#     json_data = json.loads(json_str)
 
-    def file_lookup(name):
-      if not name.startswith("Input_"):
-        return "???"
-      n = int(name[6:]) - 1
-      return filenames[n]
+#     def file_lookup(name):
+#       if not name.startswith("Input_"):
+#         return "???"
+#       n = int(name[6:]) - 1
+#       return filenames[n]
 
-    if json_data.has_key("serverErrors"):
-      errors = json_data["serverErrors"]
-      for error in errors:
-        print("SERVER ERROR: %s" % target_filename)
-        print(error["error"])
-    elif json_data.has_key("errors"):
-      errors = json_data["errors"]
-      for error in errors:
-        print("FATAL ERROR")
-        print(error["error"])
-        if error["file"]:
-          print("%s at line %d:" % (
-              file_lookup(error["file"]), error["lineno"]))
-          print(error["line"])
-          print((" " * error["charno"]) + "^")
-        sys.exit(1)
-    else:
-      if json_data.has_key("warnings"):
-        warnings = json_data["warnings"]
-        for warning in warnings:
-          print("WARNING")
-          print(warning["warning"])
-          if warning["file"]:
-            print("%s at line %d:" % (
-                file_lookup(warning["file"]), warning["lineno"]))
-            print(warning["line"])
-            print((" " * warning["charno"]) + "^")
-        print()
+#     if json_data.has_key("serverErrors"):
+#       errors = json_data["serverErrors"]
+#       for error in errors:
+#         print("SERVER ERROR: %s" % target_filename)
+#         print(error["error"])
+#     elif json_data.has_key("errors"):
+#       errors = json_data["errors"]
+#       for error in errors:
+#         print("FATAL ERROR")
+#         print(error["error"])
+#         if error["file"]:
+#           print("%s at line %d:" % (
+#               file_lookup(error["file"]), error["lineno"]))
+#           print(error["line"])
+#           print((" " * error["charno"]) + "^")
+#         sys.exit(1)
+#     else:
+#       if json_data.has_key("warnings"):
+#         warnings = json_data["warnings"]
+#         for warning in warnings:
+#           print("WARNING")
+#           print(warning["warning"])
+#           if warning["file"]:
+#             print("%s at line %d:" % (
+#                 file_lookup(warning["file"]), warning["lineno"]))
+#             print(warning["line"])
+#             print((" " * warning["charno"]) + "^")
+#         print()
 
-      if not json_data.has_key("compiledCode"):
-        print("FATAL ERROR: Compiler did not return compiledCode.")
-        sys.exit(1)
+#       if not json_data.has_key("compiledCode"):
+#         print("FATAL ERROR: Compiler did not return compiledCode.")
+#         sys.exit(1)
 
-      code = HEADER + "\n" + json_data["compiledCode"]
-      code = code.replace(remove, "")
+#       code = HEADER + "\n" + json_data["compiledCode"]
+#       code = code.replace(remove, "")
 
-      # Trim down Google's (and only Google's) Apache licences.
-      # The Closure Compiler preserves these.
-      LICENSE = re.compile("""/\\*
+#       # Trim down Google's (and only Google's) Apache licences.
+#       # The Closure Compiler preserves these.
+#       LICENSE = re.compile("""/\\*
 
- [\w ]+
+#  [\w ]+
 
- Copyright \\d+ Google Inc.
- https://developers.google.com/blockly/
+#  Copyright \\d+ Google Inc.
+#  https://developers.google.com/blockly/
 
- Licensed under the Apache License, Version 2.0 \(the "License"\);
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+#  Licensed under the Apache License, Version 2.0 \(the "License"\);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-\\*/""")
-      code = re.sub(LICENSE, "", code)
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# \\*/""")
+#       code = re.sub(LICENSE, "", code)
 
-      stats = json_data["statistics"]
-      original_b = stats["originalSize"]
-      compressed_b = stats["compressedSize"]
-      if original_b > 0 and compressed_b > 0:
-        f = open(target_filename, "w")
-        f.write(code)
-        f.close()
+#       stats = json_data["statistics"]
+#       original_b = stats["originalSize"]
+#       compressed_b = stats["compressedSize"]
+#       if original_b > 0 and compressed_b > 0:
+#         f = open(target_filename, "w")
+#         f.write(code)
+#         f.close()
 
-        original_kb = int(original_b / 1024 + 0.5)
-        compressed_kb = int(compressed_b / 1024 + 0.5)
-        ratio = int(float(compressed_b) / float(original_b) * 100 + 0.5)
-        print("SUCCESS: " + target_filename)
-        print("Size changed from %d KB to %d KB (%d%%)." % (
-            original_kb, compressed_kb, ratio))
-      else:
-        print("UNKNOWN ERROR")
+#         original_kb = int(original_b / 1024 + 0.5)
+#         compressed_kb = int(compressed_b / 1024 + 0.5)
+#         ratio = int(float(compressed_b) / float(original_b) * 100 + 0.5)
+#         print("SUCCESS: " + target_filename)
+#         print("Size changed from %d KB to %d KB (%d%%)." % (
+#             original_kb, compressed_kb, ratio))
+#       else:
+#         print("UNKNOWN ERROR")
 
 
 class Gen_langfiles(threading.Thread):
