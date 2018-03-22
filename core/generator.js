@@ -180,6 +180,7 @@ Blockly.Generator.prototype.blockToCode = function(block) {
   // Prior to 24 September 2013 'this' was the only way to access the block.
   // The current prefered method of accessing the block is through the second
   // argument to func.call, which becomes the first parameter to the generator.
+  console.log('当前是哪一个模块',block, func);
   var code = func.call(block, block);
   if (goog.isArray(code)) {
     // Value blocks return tuples of code and operator order.
