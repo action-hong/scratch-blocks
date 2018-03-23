@@ -32,6 +32,7 @@ goog.require('Blockly.Colours');
 
 goog.require('Blockly.constants');
 
+// TODO 修改colourSecondary 即可让底色变化, 不然但白色的话, 看不出field, math_number也是
 Blockly.Blocks['text'] = {
   /**
    * Block for text value.
