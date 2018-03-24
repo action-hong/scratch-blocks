@@ -28,6 +28,7 @@
 	"EDIT_PROCEDURE": "Edit",
 	"SHOW_PROCEDURE_DEFINITION": "Go to definition",
 	"CHANGE_VALUE_TITLE": "Change value:",
+<<<<<<< HEAD
 	"RENAME_VARIABLE": "Rename variable",
 	"RENAME_VARIABLE_TITLE": "Rename all '%1' variables to:",
 	"RENAME_VARIABLE_MODAL_TITLE": "Rename Variable",
@@ -48,6 +49,16 @@
 	"NEW_BROADCAST_MESSAGE_TITLE": "New message name:",
 	"BROADCAST_MODAL_TITLE": "New Message",
 	"DEFAULT_BROADCAST_MESSAGE_NAME": "message1",
+=======
+	"RENAME_VARIABLE": "Rename variable...",
+	"RENAME_VARIABLE_TITLE": "Rename all '%1' variables to:",
+	"NEW_VARIABLE": "Create variable...",
+	"NEW_VARIABLE_TITLE": "New variable name:",
+	"VARIABLE_ALREADY_EXISTS": "A variable named '%1' already exists.",
+	"VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE": "A variable named '%1' already exists for another variable of type '%2'.",
+	"PROCEDURE_ALREADY_EXISTS": "A procedure named '%1' already exists.",
+	"NEW_LIST": "Create list...",
+>>>>>>> b7f1beff997b8fb7b60981b4018beb1d6d47bfe6
 	"DELETE_VARIABLE_CONFIRMATION": "Delete %1 uses of the '%2' variable?",
 	"CANNOT_DELETE_VARIABLE_PROCEDURE": "Can't delete the variable '%1' because it's part of the definition of the function '%2'",
 	"DELETE_VARIABLE": "Delete the '%1' variable",
@@ -68,9 +79,12 @@
 	"COLOUR_BLEND_COLOUR2": "colour 2",
 	"COLOUR_BLEND_RATIO": "ratio",
 	"COLOUR_BLEND_TOOLTIP": "Blends two colours together with a given ratio (0.0 - 1.0).",
+<<<<<<< HEAD
 	"COLOUR_HUE_LABEL": "Color",
 	"COLOUR_SATURATION_LABEL": "Saturation",
 	"COLOUR_BRIGHTNESS_LABEL": "Brightness",
+=======
+>>>>>>> b7f1beff997b8fb7b60981b4018beb1d6d47bfe6
 	"CONTROLS_REPEAT_HELPURL": "https://en.wikipedia.org/wiki/For_loop",
 	"CONTROLS_REPEAT_TITLE": "repeat %1 times",
 	"CONTROLS_REPEAT_INPUT_DO": "do",
