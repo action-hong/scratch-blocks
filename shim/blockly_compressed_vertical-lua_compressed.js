@@ -1,1 +1,1 @@
-module.exports = require('imports?Blockly=./shim/blockly_compressed_vertical-javascript_compressed!exports?Blockly!../lua_compressed');
+module.exports = require('imports?Blockly=./shim/blockly_compressed_vertical-javascript_compressed!exports?Blockly!../lua_compressed!../python_compressed');

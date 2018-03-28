@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #! python2
-=======
-#!/usr/bin/python2.7
->>>>>>> b7f1beff997b8fb7b60981b4018beb1d6d47bfe6
 # Compresses the core Blockly files into a single JavaScript file.
 #
 # Copyright 2012 Google Inc.
