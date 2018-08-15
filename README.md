@@ -22,3 +22,7 @@ The "getting started" guide including [FAQ](https://scratch.mit.edu/developers#f
 
 ## Donate
 We provide [Scratch](https://scratch.mit.edu) free of charge, and want to keep it that way! Please consider making a [donation](https://secure.donationpay.org/scratchfoundation/) to support our continued engineering, design, community, and resource development efforts. Donations of any size are appreciated. Thank you!
+
+## 注意事项
+
++ toolbox的模块显示过大, 在手机上看, 而toolbox的模块的比例跟一开始`Blockly.inject({zoom: {startScale: 1.0}})`的比例是一样, 调节这个就行了, 不会显得太大

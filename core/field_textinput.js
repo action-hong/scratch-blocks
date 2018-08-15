@@ -586,7 +586,10 @@ Blockly.FieldTextInput.prototype.maybeSaveEdit_ = function() {
     }
   }
   this.setText(text);
-  this.sourceBlock_.rendered && this.sourceBlock_.render();
+  // this.sourceBlock_.rendered && this.sourceBlock_.render();
+  // https://github.com/LLK/scratch-blocks/issues/826, 为了确保横向block修改后, 正确显示修改后的值
+  var thisField = this
+  thisField.sourceBlock_.rendered && thisField.render_();
 };
 
 /**
