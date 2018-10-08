@@ -88,8 +88,11 @@ Blockly.Toolbox = function(workspace) {
  * This is the sum of the width of the flyout (250) and the category menu (52).
  * @type {number}
  */
-Blockly.Toolbox.prototype.width = 202;
-
+// 因改为 3.7603rem
+// Blockly.Toolbox.prototype.width = 202;
+var rem = document.getElementsByTagName('html')[0].style['font-size']
+rem = parseInt(rem.replace("px"))
+Blockly.Toolbox.prototype.width = 3.7602996254681647 * rem;
 /**
  * Height of the toolbox, which changes only in horizontal layout.
  * @type {number}
@@ -133,6 +136,12 @@ Blockly.Toolbox.prototype.init = function() {
   this.categoryMenu_ = new Blockly.Toolbox.CategoryMenu(this, this.HtmlDiv);
   this.populate_(workspace.options.languageTree);
   this.position();
+
+  // add transhcan
+  this.trashcan = goog.dom.createDom(goog.dom.TagName.DIV, 'trashcan');
+  Blockly.utils.addClass(/** @type {!Element} */ (this.trashcan),
+    'trashcan_close');
+  this.HtmlDiv.insertBefore(this.trashcan, this.HtmlDiv.firstElementChild);
 };
 
 /**
@@ -268,8 +277,21 @@ Blockly.Toolbox.prototype.clearSelection = function() {
  * @package
  */
 Blockly.Toolbox.prototype.addDeleteStyle = function() {
-  Blockly.utils.addClass(/** @type {!Element} */ (this.HtmlDiv),
-                         'blocklyToolboxDelete');
+  Blockly.utils.addClass(/** @type {!Element} */ (this.HtmlDiv), 'blocklyToolboxDelete');
+  Blockly.utils.addClass(/** @type {!Element} */ (this.trashcan), 'trashcan_show');
+};
+
+/**
+ * Add style on the trashcan indicating it is opening or remove
+ */
+Blockly.Toolbox.prototype.showTrashcanOpen = function (open) {
+  if (open) {
+    Blockly.utils.addClass(/** @type {!Element} */ (this.trashcan),
+      'trashcan_open');
+  } else {
+    Blockly.utils.removeClass(/** @type {!Element} */ (this.trashcan),
+      'trashcan_open');
+  }
 };
 
 /**
@@ -279,6 +301,10 @@ Blockly.Toolbox.prototype.addDeleteStyle = function() {
 Blockly.Toolbox.prototype.removeDeleteStyle = function() {
   Blockly.utils.removeClass(/** @type {!Element} */ (this.HtmlDiv),
                             'blocklyToolboxDelete');
+  Blockly.utils.removeClass(/** @type {!Element} */ (this.trashcan),
+    'trashcan_open');
+  Blockly.utils.removeClass(/** @type {!Element} */ (this.trashcan),
+    'trashcan_show');
 };
 
 /**

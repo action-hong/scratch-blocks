@@ -78,8 +78,11 @@ Blockly.VerticalFlyout.prototype.autoClose = false;
  * The width of the flyout, if not otherwise specified.
  * @type {number}
  */
-Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 150;
-
+// TODO: 应该改为2.03745rem
+// Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 150;
+var rem = document.getElementsByTagName('html')[0].style['font-size']
+rem = parseInt(rem.replace("px"))
+Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 2.0374531835205993 * rem
 /**
  * Size of a checkbox next to a variable reporter.
  * @type {number}

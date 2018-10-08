@@ -350,11 +350,19 @@ Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function(isOutside
   var trashcan = this.workspace_.trashcan;
   if (this.wouldDeleteBlock_) {
     this.draggingBlock_.setDeleteStyle(true);
-    if (this.deleteArea_ == Blockly.DELETE_AREA_TRASH && trashcan) {
+    var a = this.deleteArea_;
+    if (a == Blockly.DELETE_AREA_TOOLBOX && this.workspace_.toolbox_) {
+      // 单个blockly模块左上角显示的小workspace, 是没有toolbox的
+      this.workspace_.toolbox_.showTrashcanOpen(true);
+    } else if ( a == Blockly.DELETE_AREA_TRASH && trashcan) {
       trashcan.setOpen_(true);
     }
   } else {
     this.draggingBlock_.setDeleteStyle(false);
+    if (this.workspace_.toolbox_) {
+      // 单个blockly模块左上角显示的小workspace, 是没有toolbox的
+      this.workspace_.toolbox_.showTrashcanOpen(false);
+    }
     if (trashcan) {
       trashcan.setOpen_(false);
     }

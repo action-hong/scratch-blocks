@@ -259,7 +259,13 @@ Blockly.Categories = {
   "control": "control",
   "sensing": "sensing",
   "operators": "operators",
-  "more": "more"
+  "more": "more",
+  "action": "action",
+  "voice": "voice",
+  "start": "start",
+  "move": "move",
+  "end": "end",
+  "logic": "logic"
 };
 
 /**
