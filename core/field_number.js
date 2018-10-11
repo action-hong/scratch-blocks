@@ -57,6 +57,7 @@ Blockly.FieldNumber = function(opt_value, opt_min, opt_max, opt_precision,
   opt_value = (opt_value && !isNaN(opt_value)) ? String(opt_value) : '0';
   Blockly.FieldNumber.superClass_.constructor.call(
       this, opt_value, opt_validator, numRestrictor);
+  this.setConstraints(opt_min, opt_max, opt_precision);
   this.addArgType('number');
 };
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
@@ -334,4 +335,43 @@ Blockly.FieldNumber.prototype.onHide_ = function() {
   // Clear accessibility properties
   Blockly.DropDownDiv.content_.removeAttribute('role');
   Blockly.DropDownDiv.content_.removeAttribute('aria-haspopup');
+};
+
+Blockly.FieldNumber.prototype.setConstraints = function(min, max, precision) {
+  precision = parseFloat(precision);
+  this.precision_ = isNaN(precision) ? 0 : precision;
+  min = parseFloat(min);
+  this.min_ = isNaN(min) ? -Infinity : min;
+  max = parseFloat(max);
+  this.max_ = isNaN(max) ? Infinity : max;
+  this.setValue(this.callValidator(this.getValue()));
+};
+
+/**
+ * Ensure that only a number in the correct range may be entered.
+ * @param {string} text The user's text.
+ * @return {?string} A string representing a valid number, or null if invalid.
+ */
+Blockly.FieldNumber.prototype.classValidator = function(text) {
+  if (text === null) {
+    return null;
+  }
+  text = String(text);
+  // TODO: Handle cases like 'ten', '1.203,14', etc.
+  // 'O' is sometimes mistaken for '0' by inexperienced users.
+  text = text.replace(/O/ig, '0');
+  // Strip out thousands separators.
+  text = text.replace(/,/g, '');
+  var n = parseFloat(text || 0);
+  if (isNaN(n)) {
+    // Invalid number.
+    return null;
+  }
+  // Round to nearest multiple of precision.
+  if (this.precision_ && isFinite(n)) {
+    n = Math.round(n / this.precision_) * this.precision_;
+  }
+  // Get the value in range.
+  n = goog.math.clamp(n, this.min_, this.max_);
+  return String(n);
 };
