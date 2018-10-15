@@ -48,6 +48,7 @@ goog.require('goog.userAgent');
  *     to validate any constraints on what the user entered.  Takes the new
  *     text as an argument and returns the accepted text or null to abort
  *     the change.
+ * @param {obj = } element 传入的属性值
  * @extends {Blockly.FieldTextInput}
  * @constructor
  */
@@ -61,6 +62,8 @@ Blockly.FieldNumber = function(opt_value, opt_min, opt_max, opt_precision,
   this.addArgType('number');
 };
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
+
+Blockly.FieldNumber.prototype.prefix = ''
 
 /**
  * Fixed width of the num-pad drop-down, in px.
@@ -158,6 +161,8 @@ Blockly.FieldNumber.prototype.showEditor_ = function() {
   // Do not focus on mobile devices so we can show the num-pad
   var showNumPad =
       goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
+  // no show NUM-PAD
+  showNumPad = false
   Blockly.FieldNumber.superClass_.showEditor_.call(this, false, showNumPad);
 
   // Show a numeric keypad in the drop-down on touch
@@ -357,6 +362,8 @@ Blockly.FieldNumber.prototype.classValidator = function(text) {
     return null;
   }
   text = String(text);
+  // 去掉前缀
+  text = text.replace(this.prefix, '')
   // TODO: Handle cases like 'ten', '1.203,14', etc.
   // 'O' is sometimes mistaken for '0' by inexperienced users.
   text = text.replace(/O/ig, '0');
@@ -374,4 +381,55 @@ Blockly.FieldNumber.prototype.classValidator = function(text) {
   // Get the value in range.
   n = goog.math.clamp(n, this.min_, this.max_);
   return String(n);
+};
+
+Blockly.FieldNumber.prototype.setAttributes = function(attributes) {
+  var max = attributes.max
+  if (max) {
+    max = max.value
+  }
+  var min = attributes.min
+  if (min) {
+    min = min.value
+  }
+
+  var prefix = attributes.prefix
+  if (prefix) {
+    this.prefix = prefix.value
+  }
+  // TODO: 是否要判断当前field是 FiledNumber?
+  // REVIEW: 是否会影响其他本身就设置好的?
+  if (max !== undefined && min !== undefined) {
+    // 否则一些本身在Blockly.init设置的block的field本身的范围会被覆盖
+    this.setConstraints(min, max)
+  }
+}
+
+Blockly.FieldNumber.prototype.fillAttributes = function(container) {
+  // 导出需要的属性值
+  if (this.min_ !== undefined) {
+    container.setAttribute('min', this.min_);
+  }
+  if (this.max_ !== undefined) {
+    container.setAttribute('max', this.max_);
+  }
+  if (this.prefix !== undefined) {
+    container.setAttribute('prefix', this.prefix);
+  }
+}
+
+Blockly.FieldNumber.prototype.getValue = function() {
+  var text = Blockly.FieldNumber.superClass_.getValue.call(this)
+  // 取出来时, 去掉前缀
+  return text.replace(this.prefix, '')
+};
+
+Blockly.FieldNumber.prototype.setText = function(text) {
+  if (text === null) {
+    // No change if null.
+    return;
+  }
+  // 加上前缀
+  text = this.prefix + text
+  Blockly.FieldNumber.superClass_.setText.call(this, text)
 };

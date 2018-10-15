@@ -265,7 +265,8 @@ Blockly.Categories = {
   "start": "start",
   "move": "move",
   "end": "end",
-  "logic": "logic"
+  "logic": "logic",
+  "sensor": "sensor"
 };
 
 /**

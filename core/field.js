@@ -732,3 +732,16 @@ Blockly.Field.prototype.getClickTarget_ = function() {
 Blockly.Field.prototype.getAbsoluteXY_ = function() {
   return goog.style.getPageOffset(this.getClickTarget_());
 };
+
+
+/**
+ * 将xml中的属性值导入, 看需要什么处理
+ * @param {obj} attributes xml中该field的属性值, 这样可以传入最大最小值前缀之类的东西, 直接去进行处理
+ */
+Blockly.Field.prototype.setAttributes = function(attributes) {
+
+}
+
+Blockly.Field.prototype.fillAttributes = function(attributes) {
+
+}

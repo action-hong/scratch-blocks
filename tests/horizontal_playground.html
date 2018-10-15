@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <title>Horizontal Playground</title>
-
+    <script src="./flexible.js"></script>
     <script src="../blockly_uncompressed_horizontal.js"></script>
     <script src="../msg/messages.js"></script>
     <script src="../blocks_common/math.js"></script>
@@ -58,7 +58,8 @@
           readOnly: false,
           rtl: rtl,
           scrollbars: true,
-          toolbox: toolbox,
+          // toolbox: toolbox,
+          toolbox: Blockly.Blocks.defaultToolboxSimple,
           trashcan: true,
           horizontalLayout: side == 'top' || side == 'bottom',
           toolboxPosition: side == 'top' || side == 'start' ? 'start' : 'end',
@@ -301,6 +302,17 @@
             });
         }
         fakeDragWrapper();
+      }
+
+      function getXmlText () {
+        let xml = Blockly.Xml.workspaceToDom(workspace, false)
+        let xmlText = Blockly.Xml.domToText(xml)
+        return xmlText
+      }
+
+      function importXml (text) {
+        let xml = Blockly.Xml.textToDom(text)
+        Blockly.Xml.domToWorkspace(xml, workspace)
       }
     </script>
 

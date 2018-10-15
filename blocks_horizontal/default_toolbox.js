@@ -124,7 +124,7 @@ Blockly.Blocks.defaultToolboxSimple = '<xml id="toolbox-simple" style="display: 
         '<block type="control_repeat">' +
         '<value name="TIMES">' +
         '<shadow type="math_whole_number">' +
-        '<field name="NUM">4</field>' +
+        '<field name="NUM" prefix=">" max="10" min="1">4</field>' +
         '</shadow>' +
         '</value>' +
         '</block>' +

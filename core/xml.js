@@ -137,12 +137,9 @@ Blockly.Xml.fieldToDom_ = function(field) {
     } else {
       var container = goog.dom.createDom('field', null, field.getValue());
       container.setAttribute('name', field.name);
-      if (field.min_ !== undefined) {
-        container.setAttribute('min', field.min_);
-      }
-      if (field.max_ !== undefined) {
-        container.setAttribute('max', field.max_);
-      }
+      // 导出需要的属性值
+      // 需要给输出的xml, 添加那些属性值, 最大最小值都可以放到这里面来
+      field.fillAttributes(container)
       return container;
     }
   }
@@ -830,20 +827,9 @@ Blockly.Xml.domToField_ = function(block, fieldName, xml) {
     Blockly.Xml.domToFieldVariable_(workspace, xml, text, field);
   } else {
     // 从xml读
-    var max = xml.attributes.max
-    if (max) {
-      max = max.value
-    }
-    var min = xml.attributes.min
-    if (min) {
-      min = min.value
-    }
-    // TODO: 是否要判断当前field是 FiledNumber?
-    // REVIEW: 是否会影响其他本身就设置好的?
-    if (field.setConstraints && max !== undefined && min !== undefined) {
-      // 否则一些本身在Blockly.init设置的block的field本身的范围会被覆盖
-      field.setConstraints(min, max)
-    }
+    // 将所有的属性值传入, 自己要处理什么, 自己去处理
+    field.setAttributes(xml.attributes)
+
     field.setValue(text);
   }
 };
