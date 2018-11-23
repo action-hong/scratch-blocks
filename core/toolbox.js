@@ -91,7 +91,7 @@ Blockly.Toolbox = function(workspace) {
 // 因改为 3.7603rem
 // Blockly.Toolbox.prototype.width = 202;
 var rem = document.getElementsByTagName('html')[0].style['font-size']
-rem = parseInt(rem.replace("px"))
+rem = parseInt(rem.replace("px", ""))
 Blockly.Toolbox.prototype.width = 3.7602996254681647 * rem;
 /**
  * Height of the toolbox, which changes only in horizontal layout.
@@ -222,6 +222,11 @@ Blockly.Toolbox.prototype.showAll_ = function() {
  * @return {number} The width of the toolbox.
  */
 Blockly.Toolbox.prototype.getWidth = function() {
+  if (this.width <= 0) {
+    var rem = document.getElementsByTagName('html')[0].style['font-size']
+    rem = parseInt(rem.replace("px", ""))
+    Blockly.Toolbox.prototype.width = 3.7602996254681647 * rem;
+  }
   return this.width;
 };
 
