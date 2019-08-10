@@ -162,7 +162,10 @@ Blockly.FieldNumber.prototype.showEditor_ = function() {
   var showNumPad =
       goog.userAgent.MOBILE || goog.userAgent.ANDROID || goog.userAgent.IPAD;
   // no show NUM-PAD
-  // showNumPad = false
+  // 设定参数来决定是否使用自带的数字键盘
+  if (Blockly.noUseNumPad) {
+    showNumPad = false;
+  }
   Blockly.FieldNumber.superClass_.showEditor_.call(this, false, showNumPad);
 
   // Show a numeric keypad in the drop-down on touch
