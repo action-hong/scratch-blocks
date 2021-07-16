@@ -72,7 +72,7 @@ goog.inherits(Blockly.VerticalFlyout, Blockly.Flyout);
  * Does the flyout automatically close when a block is created?
  * @type {boolean}
  */
-Blockly.VerticalFlyout.prototype.autoClose = false;
+Blockly.VerticalFlyout.prototype.autoClose = true;
 
 /**
  * The width of the flyout, if not otherwise specified.
@@ -80,10 +80,10 @@ Blockly.VerticalFlyout.prototype.autoClose = false;
  */
 // TODO: 应该改为2.03745rem
 // Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 150;
-var rem = document.getElementsByTagName('html')[0].style['font-size']
+var rem = document.getElementsByTagName('html')[0].style['font-size'];
 console.log('html font-size = ' + rem);
-rem = parseInt(rem.replace("px", ""))
-Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 2.0374531835205993 * rem
+rem = parseInt(rem.replace("px", ""));
+Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 2.0374531835205993 * rem;
 /**
  * Size of a checkbox next to a variable reporter.
  * @type {number}

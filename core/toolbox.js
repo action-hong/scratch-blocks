@@ -90,8 +90,8 @@ Blockly.Toolbox = function(workspace) {
  */
 // 因改为 3.7603rem
 // Blockly.Toolbox.prototype.width = 202;
-var rem = document.getElementsByTagName('html')[0].style['font-size']
-rem = parseInt(rem.replace("px", ""))
+var rem = document.getElementsByTagName('html')[0].style['font-size'];
+rem = parseInt(rem.replace("px", ""));
 Blockly.Toolbox.prototype.width = 3.7602996254681647 * rem;
 /**
  * Height of the toolbox, which changes only in horizontal layout.
@@ -191,8 +191,8 @@ Blockly.Toolbox.prototype.createFlyout_ = function() {
  */
 Blockly.Toolbox.prototype.populate_ = function(newTree) {
   this.categoryMenu_.populate(newTree);
-  this.showAll_();
-  this.setSelectedItem(this.categoryMenu_.categories_[0], false);
+  // this.showAll_();
+  // this.setSelectedItem(this.categoryMenu_.categories_[0], false);
 };
 
 /**
@@ -223,8 +223,8 @@ Blockly.Toolbox.prototype.showAll_ = function() {
  */
 Blockly.Toolbox.prototype.getWidth = function() {
   if (this.width <= 0) {
-    var rem = document.getElementsByTagName('html')[0].style['font-size']
-    rem = parseInt(rem.replace("px", ""))
+    var rem = document.getElementsByTagName('html')[0].style['font-size'];
+    rem = parseInt(rem.replace("px", ""));
     Blockly.Toolbox.prototype.width = 3.7602996254681647 * rem;
   }
   return this.width;
@@ -289,7 +289,7 @@ Blockly.Toolbox.prototype.addDeleteStyle = function() {
 /**
  * Add style on the trashcan indicating it is opening or remove
  */
-Blockly.Toolbox.prototype.showTrashcanOpen = function (open) {
+Blockly.Toolbox.prototype.showTrashcanOpen = function(open) {
   if (open) {
     Blockly.utils.addClass(/** @type {!Element} */ (this.trashcan),
       'trashcan_open');
@@ -413,9 +413,16 @@ Blockly.Toolbox.prototype.setFlyoutScrollPos = function(pos) {
  * @param {boolean=} opt_shouldScroll Whether to scroll to the selected category. Defaults to true.
  */
 Blockly.Toolbox.prototype.setSelectedItem = function(item, opt_shouldScroll) {
+  console.log('==> setSelectedItem', this.selectedItem_, item);
   if (typeof opt_shouldScroll === 'undefined') {
     opt_shouldScroll = true;
   }
+
+  if (item === this.selectedItem_) {
+    return;
+  }
+
+
   if (this.selectedItem_) {
     // They selected a different category but one was already open.  Close it.
     this.selectedItem_.setSelected(false);
@@ -424,11 +431,15 @@ Blockly.Toolbox.prototype.setSelectedItem = function(item, opt_shouldScroll) {
   if (this.selectedItem_ != null) {
     this.selectedItem_.setSelected(true);
     // Scroll flyout to the top of the selected category
-    var categoryName = item.name_;
-    if (opt_shouldScroll) {
-      this.scrollToCategoryByName(categoryName);
-    }
+    // var categoryName = item.name_;
+    // if (opt_shouldScroll) {
+    //   this.scrollToCategoryByName(categoryName);
+    // }
+    this.flyout_.show(item.getContents());
+  } else {
+    this.flyout_.hide();
   }
+
 };
 
 /**

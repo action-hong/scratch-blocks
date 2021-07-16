@@ -64,6 +64,7 @@ Blockly.FieldNumber = function(opt_value, opt_min, opt_max, opt_precision,
 goog.inherits(Blockly.FieldNumber, Blockly.FieldTextInput);
 
 Blockly.FieldNumber.prototype.prefix = '';
+Blockly.FieldNumber.prototype.suffix = '';
 
 /**
  * Fixed width of the num-pad drop-down, in px.
@@ -365,8 +366,8 @@ Blockly.FieldNumber.prototype.classValidator = function(text) {
     return null;
   }
   text = String(text);
-  // 去掉前缀
-  text = text.replace(this.prefix, '');
+  // 去掉前缀, 去掉后缀
+  text = text.replace(this.prefix, '').replace(this.suffix, '');
   // TODO: Handle cases like 'ten', '1.203,14', etc.
   // 'O' is sometimes mistaken for '0' by inexperienced users.
   text = text.replace(/O/ig, '0');
@@ -400,6 +401,11 @@ Blockly.FieldNumber.prototype.setAttributes = function(attributes) {
   if (prefix) {
     this.prefix = prefix.value;
   }
+
+  var suffix = attributes.suffix;
+  if (suffix) {
+    this.suffix = suffix.value;
+  }
   // TODO: 是否要判断当前field是 FiledNumber?
   // REVIEW: 是否会影响其他本身就设置好的?
   if (max !== undefined && min !== undefined) {
@@ -419,12 +425,15 @@ Blockly.FieldNumber.prototype.fillAttributes = function(container) {
   if (this.prefix !== undefined) {
     container.setAttribute('prefix', this.prefix);
   }
+  if (this.suffix !== undefined) {
+    container.setAttribute('suffix', this.suffix);
+  }
 };
 
 Blockly.FieldNumber.prototype.getValue = function() {
   var text = Blockly.FieldNumber.superClass_.getValue.call(this);
-  // 取出来时, 去掉前缀
-  return text.replace(this.prefix, '');
+  // 取出来时, 去掉前缀, 后缀
+  return text.replace(this.prefix, '').replace(this.suffix, '');
 };
 
 Blockly.FieldNumber.prototype.setText = function(text) {
@@ -432,7 +441,7 @@ Blockly.FieldNumber.prototype.setText = function(text) {
     // No change if null.
     return;
   }
-  // 加上前缀
-  text = this.prefix + text;
+  // 加上前缀, 后缀
+  text = this.prefix + text + this.suffix;
   Blockly.FieldNumber.superClass_.setText.call(this, text);
 };
