@@ -339,14 +339,6 @@ Blockly.Flyout.prototype.setParentToolbox = function(toolbox) {
  * @return {number} The width of the flyout.
  */
 Blockly.Flyout.prototype.getWidth = function() {
-  if (this.DEFAULT_WIDTH <= 0) {
-    // 由于webview的加载问题, rem值可能会先变为0, 而后再变为正常值
-    // 而在这中间如果DEFAULT_WIDTH进行赋值, 则会变为0, 造成错误
-    // 同理 Blockly.Toolbox.prototype.width 也是如此, 在取值时再进行检查
-    var rem = document.getElementsByTagName('html')[0].style['font-size']
-    rem = parseInt(rem.replace("px", ""))
-    Blockly.VerticalFlyout.prototype.DEFAULT_WIDTH = 2.0374531835205993 * rem
-  }
   return this.DEFAULT_WIDTH;
 };
 

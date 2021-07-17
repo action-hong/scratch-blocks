@@ -215,17 +215,18 @@ Blockly.FieldNumber.prototype.position_ = function() {
   var position = this.getAbsoluteXY_();
   // If we can fit it, render below the shadow block
   var primaryX = position.x + bBox.width / 2;
-  var primaryY = position.y + bBox.height +
-      Blockly.FieldNumber.DROPDOWN_Y_PADDING;
+  // var primaryY = position.y + bBox.height +
+  //     Blockly.FieldNumber.DROPDOWN_Y_PADDING;
+  var primaryY = position.y + bBox.height;
   // If we can't fit it, render above the entire parent block
   var secondaryX = primaryX;
-  var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) -
-      (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
-
+  // var secondaryY = position.y - (Blockly.BlockSvg.MIN_BLOCK_Y * scale) -
+  //     (Blockly.BlockSvg.FIELD_Y_OFFSET * scale);
+  var secondaryY = position.y;
   Blockly.DropDownDiv.setBoundsElement(
       this.sourceBlock_.workspace.getParentSvg().parentNode);
   Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY,
-      this.onHide_.bind(this));
+      this.onHide_.bind(this), bBox);
 };
 
 /**

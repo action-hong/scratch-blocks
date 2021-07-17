@@ -219,11 +219,11 @@ Blockly.DropDownDiv.showPositionedByBlock = function(owner, block,
  * @param {Function=} opt_onHide Optional callback for when the drop-down is hidden
  * @return {boolean} True if the menu rendered at the primary origin point.
  */
-Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secondaryY, opt_onHide) {
+Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secondaryY, opt_onHide, box) {
   Blockly.DropDownDiv.owner_ = owner;
   Blockly.DropDownDiv.onHide_ = opt_onHide;
   var div = Blockly.DropDownDiv.DIV_;
-  var metrics = Blockly.DropDownDiv.getPositionMetrics(primaryX, primaryY, secondaryX, secondaryY);
+  var metrics = Blockly.DropDownDiv.getPositionMetrics(primaryX, primaryY, secondaryX, secondaryY, box);
   // Update arrow CSS
   Blockly.DropDownDiv.arrow_.style.transform = 'translate(' +
     metrics.arrowX + 'px,' + metrics.arrowY + 'px) rotate(45deg)';
@@ -263,12 +263,63 @@ Blockly.DropDownDiv.show = function(owner, primaryX, primaryY, secondaryX, secon
  * @param {number} secondaryY Secondary/alternative origin point y, in absolute px
  * @returns {Object} Various final metrics, including rendered positions for drop-down and arrow.
  */
-Blockly.DropDownDiv.getPositionMetrics = function(primaryX, primaryY, secondaryX, secondaryY) {
+Blockly.DropDownDiv.getPositionMetrics = function(primaryX, primaryY, secondaryX, secondaryY, box) {
   var div = Blockly.DropDownDiv.DIV_;
   var boundPosition = Blockly.DropDownDiv.boundsElement_.getBoundingClientRect();
 
   var boundSize = goog.style.getSize(Blockly.DropDownDiv.boundsElement_);
   var divSize = goog.style.getSize(div);
+
+  if (box) {
+    console.log(boundPosition, boundSize, divSize, primaryX, primaryY);
+
+    var offsetPrimaryX = primaryX - boundPosition.left;
+    var offsetPrimaryY = primaryY - boundPosition.top;
+    var offsetSecondaryX = secondaryX - boundPosition.left;
+    var offsetSecondaryY = secondaryY - boundPosition.top;
+    console.log(offsetPrimaryX, offsetPrimaryY);
+    var padding = Blockly.DropDownDiv.PADDING_Y;
+    var ix, iy, rx, ry;
+    var overflowY = boundSize.height - (offsetPrimaryY + divSize.height + padding);
+    if (overflowY > 0) {
+      // 首先判断能否放在下面
+      ix = primaryX;
+      iy = primaryY + padding;
+      rx = primaryX - divSize.width / 2;
+      ry = iy;
+    } else if (offsetSecondaryY - divSize.height - padding > 0) {
+      // 判断上面
+      ix = primaryX;
+      iy = secondaryY - padding - divSize.height;
+      rx = primaryX - divSize.width / 2;
+      ry = iy;
+    } else if (offsetSecondaryX + divSize.width + padding < boundSize.width) {
+      // 判断右边
+      ix = secondaryX + box.width + padding;
+      iy = primaryY + overflowY;
+      rx = ix;
+      ry = iy;
+    } else {
+      // 左边
+      ix = secondaryX - padding - divSize.width;
+      iy = primaryY + overflowY;
+      rx = ix;
+      ry = iy;
+    }
+
+    return {
+      initialX: ix,
+      initialY : iy,
+      finalX: rx,
+      finalY: ry,
+      hideArrow: true
+    };
+  }
+
+
+  // 判断左边
+
+  // 判断右边
 
   // First decide if we will render at primary or secondary position
   // i.e., above or below

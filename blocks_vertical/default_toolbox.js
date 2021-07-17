@@ -32,8 +32,8 @@ Blockly.Blocks.defaultToolbox = '<xml id="toolbox-categories" style="display: no
   '<category name="Motion" colour="#4C97FF" secondaryColour="#3373CC">'+
     '<block type="motion_movesteps" id="motion_movesteps">'+
       '<value name="STEPS">'+
-        '<shadow type="math_number">'+
-          '<field name="NUM">10</field>'+
+        '<shadow type="math_number" min="0">'+
+          '<field name="NUM" min="0" max="10">10</field>'+
         '</shadow>'+
       '</value>'+
     '</block>'+

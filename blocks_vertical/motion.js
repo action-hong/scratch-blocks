@@ -39,7 +39,8 @@ Blockly.Blocks['motion_movesteps'] = {
       "args0": [
         {
           "type": "input_value",
-          "name": "STEPS"
+          "name": "STEPS",
+          "min": 0
         }
       ],
       "category": Blockly.Categories.motion,
